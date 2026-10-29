@@ -1,0 +1,120 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>ARMANII · Terminal en vivo</title><script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--g:#00ff41;--c:#00e5ff;--a:#ffb000;--r:#ff3860;--m:#ff4fd8;--v:#a78bfa;--bg:#05070a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0,#08131a,#000 70%);color:#d8ffe8;font-family:ui-monospace,"JetBrains Mono","Courier New",monospace;font-size:16px;line-height:1.4}
+header{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #00ff4155;background:#000c;position:sticky;top:0;z-index:5}
+header h1{margin:0;font-size:22px;color:var(--g);text-shadow:0 0 10px var(--g);letter-spacing:2px}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);animation:pl 1.2s infinite;vertical-align:middle}@keyframes pl{50%{opacity:.2}}
+.hd{display:flex;gap:16px;flex-wrap:wrap;font-size:15px}.hd b{color:#fff}
+main{display:grid;gap:10px;padding:10px;grid-template-columns:repeat(12,1fr)}
+.p{background:#020b08e6;border:1px solid #00ff4155;border-radius:6px;padding:10px 12px;box-shadow:0 0 12px #00ff4118 inset;min-width:0}
+.p h2{margin:0 0 6px;font-size:14px;letter-spacing:1px;color:var(--c);text-transform:uppercase;display:flex;justify-content:space-between;gap:6px}.p h2 small{color:#7a9;font-size:12px;text-transform:none}
+.s3{grid-column:span 3}.s4{grid-column:span 4}.s5{grid-column:span 5}.s6{grid-column:span 6}.s7{grid-column:span 7}.s8{grid-column:span 8}.s12{grid-column:span 12}
+@media(max-width:1100px){.s3,.s4,.s5{grid-column:span 6}.s7,.s8{grid-column:span 12}}
+@media(max-width:700px){main{grid-template-columns:1fr;padding:6px}.p{grid-column:1/-1!important}header h1{font-size:18px}}
+.big{font-size:40px;font-weight:bold;color:var(--g);text-shadow:0 0 14px var(--g);line-height:1.1}.mid{font-size:20px;color:var(--c)}
+.up{color:var(--g)}.dn{color:var(--r)}.mut{color:#8fb3a0;font-size:13px}a{color:var(--c)}
+table{width:100%;border-collapse:collapse;font-size:14px}th{color:#7a9;text-align:left;font-weight:normal;border-bottom:1px solid #00ff4133;padding:3px}td{padding:4px 3px;border-bottom:1px solid #00ff4112;white-space:nowrap}td.r,th.r{text-align:right}
+.ag{display:grid;gap:8px;grid-template-columns:repeat(3,1fr)}@media(max-width:1100px){.ag{grid-template-columns:repeat(2,1fr)}}@media(max-width:480px){.ag{grid-template-columns:1fr}}
+.card{border:1px solid #00e5ff44;border-radius:6px;padding:8px;background:#000a}.nm{font-weight:bold;display:flex;align-items:center;gap:6px}
+.st{margin-top:4px;color:#fff;font-size:14px;min-height:40px}.think{color:var(--a);font-size:13px}.think::after{content:"▋";animation:pl .7s infinite}
+#log{height:250px;overflow:auto;font-size:13px;background:#000;border:1px dashed #00ff4144;padding:6px}#log div{padding:1px 0}
+.mv{padding:5px 0;border-bottom:1px dashed #00ff4122;font-size:14px}.prop{border-left:3px solid var(--a);padding-left:8px;color:#fff}
+.tag{display:inline-block;border:1px solid var(--a);color:var(--a);padding:0 6px;border-radius:3px;font-size:12px;margin-top:6px}
+.cd{font-size:32px;color:var(--a);text-shadow:0 0 10px var(--a)}.gl{font-size:14px;display:flex;flex-wrap:wrap;gap:6px 20px}.gl b{color:var(--a)}
+canvas.sp{width:80px;height:22px}#sch{max-height:220px}#wsp{width:100%;height:70px}
+</style></head><body>
+<header><h1><span class="dot"></span> ARMANII · TERMINAL EN VIVO</h1>
+<div class="hd"><span>🕒 <b id="clk">--</b> CDMX</span><span>última actualización hace <b id="ago">--</b>s</span><span>siguiente en <b id="cd">--</b>s</span><span class="up">SOLO LECTURA</span><span id="err" class="dn"></span></div></header>
+<main>
+<section class="p s4"><h2>Saldo en vivo <small><a id="scan" target="_blank" rel="noopener">ver en Solscan ↗</a></small></h2>
+<div class="big" id="mxn">sin datos</div><div class="mid" id="usd"></div><div id="solamt" class="mut"></div><div id="pnl" style="font-size:18px;margin-top:4px"></div><div class="mut" id="bl"></div></section>
+
+<section class="p s4"><h2>Ganancia 24h <small>tu SOL × precio hace 24h vs ahora</small></h2><div id="g24" class="big" style="font-size:32px">sin datos</div><div id="g24b" class="mut"></div><canvas id="wsp"></canvas></section>
+<section class="p s4"><h2>Próxima propuesta <small>9:00 y 18:00 CDMX</small></h2><div class="mut">Te mando la propuesta en el chat en:</div><div class="cd" id="pcd">--:--:--</div><div class="mut" id="pnext"></div>
+<div class="prop" id="pidea" style="margin-top:6px">sin datos</div><span class="tag">⏳ esperando tu aprobación</span></section>
+<section class="p s5"><h2>Criptos en uso · Portafolio</h2><table><thead><tr><th>Moneda</th><th class="r">Cantidad</th><th class="r">USD</th><th class="r">MXN</th><th class="r">24h</th><th class="r">%</th></tr></thead><tbody id="pf"><tr><td colspan=6>sin datos</td></tr></tbody></table><div class="mut" id="tokn"></div></section>
+<section class="p s7"><h2>Watchlist Solana <small>precios en vivo (CoinGecko)</small></h2><table><thead><tr><th>Moneda</th><th class="r">Precio USD</th><th class="r">24h</th><th class="r">Gráfica 24h</th></tr></thead><tbody id="wl"><tr><td colspan=4>sin datos</td></tr></tbody></table></section>
+<section class="p s8"><h2>Agentes trabajando <small>revisan datos reales cada 25 s · ninguno gasta sin tu OK</small></h2><div class="ag" id="ag"></div></section>
+<section class="p s4"><h2>Bitácora de agentes <small>últimas 60</small></h2><div id="log"></div></section>
+<section class="p s7"><h2>Gráfica SOL 24h</h2><canvas id="sch"></canvas></section>
+<section class="p s5"><h2>Movimientos de la cartera <small>hora CDMX</small></h2><div id="mv">sin datos</div></section>
+<section class="p s12 gl"><span><b>Saldo:</b> lo que vale todo lo que tienes ahorita.</span><span><b>Ganancia:</b> cuánto subió o bajó tu dinero.</span><span><b>Stop:</b> precio donde se vende para no perder más.</span><span><b>Propuesta:</b> idea de compra que solo pasa si tú dices OK.</span><span class="mut">Esta página solo lee datos públicos: nunca pide llaves ni frase semilla y no opera sola.</span></section>
+</main><script>
+const ADDR="5MVKHzjVuR7eVXxBcvbfLu9eLjguH9hMKq3YGj8Dutgp",REFRESH=25,TZ="America/Mexico_City";
+const RPCS=["https://solana-rpc.publicnode.com","https://api.mainnet-beta.solana.com"],TP=["TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA","TokenzQdBNbLqP5VEhdkAS6EPFLC1PE9qmrLQ5jBPgxq"];
+const CG={solana:"SOL","jupiter-exchange-solana":"JUP","jito-governance-token":"JTO","pyth-network":"PYTH",bonk:"BONK",dogwifcoin:"WIF",raydium:"RAY",orca:"ORCA"};
+const KN={"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v":"USDC","Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB":"USDT","JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN":"JUP","DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263":"BONK","EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm":"WIF","jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL":"JTO","HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3":"PYTH","4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R":"RAY"};
+const $=i=>document.getElementById(i),f=(n,d=2)=>Number(n).toLocaleString("es-MX",{minimumFractionDigits:d,maximumFractionDigits:d});
+const pr=p=>p>=1?f(p,2):p>=0.01?f(p,4):f(p,8),sg=x=>(x>=0?"+":"")+f(x,2)+"%",cl=x=>x>=0?"up":"dn";
+const hm=t=>new Date(t).toLocaleTimeString("es-MX",{timeZone:TZ,hour:"2-digit",minute:"2-digit",second:"2-digit"}),dt=t=>new Date(t).toLocaleString("es-MX",{timeZone:TZ,day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})+" CDMX";
+const S={p:{},mk:null,mkT:0,mxn:null,sol:null,toks:[],tokOk:false,chart:null,chartT:0,txs:[],last:0,errs:[]},TXC=JSON.parse(localStorage.getItem("wl_txc")||"{}");
+
+$("scan").href="https://solscan.io/account/"+ADDR;
+let base=JSON.parse(localStorage.getItem("wl_base")||"null")||{usd:22.48,date:"2026-10-29"};localStorage.setItem("wl_base",JSON.stringify(base));
+async function rpc(m,pa){let e;for(const u of RPCS){try{const j=await(await fetch(u,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({jsonrpc:"2.0",id:1,method:m,params:pa})})).json();if(j.error)throw new Error(j.error.message);return j.result}catch(x){e=x}}throw e}
+async function gj(u){const r=await fetch(u);if(!r.ok)throw new Error(r.status);return r.json()}
+const L={wallet:async()=>{S.sol=(await rpc("getBalance",[ADDR])).value/1e9},
+tokens:async()=>{let a=[],ok=false;for(const p of TP){try{const r=await rpc("getTokenAccountsByOwner",[ADDR,{programId:p},{encoding:"jsonParsed"}]);ok=true;r.value.forEach(x=>{const i=x.account.data.parsed.info;if(i.tokenAmount.uiAmount>0)a.push({mint:i.mint,amt:i.tokenAmount.uiAmount})})}catch(e){}}
+ S.tokOk=ok;if(a.length){try{const j=await gj("https://lite-api.jup.ag/price/v3?ids="+a.map(t=>t.mint).join(","));a.forEach(t=>{t.price=j[t.mint]?.usdPrice??null;t.c24=j[t.mint]?.priceChange24h??null})}catch(e){}}if(ok)S.toks=a},
+precios:async()=>{if(S.mk&&Date.now()-S.mkT<55000)return;try{const m=await gj("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids="+Object.keys(CG).join(",")+"&sparkline=true&price_change_percentage=24h");S.mk=m;S.mkT=Date.now();m.forEach(x=>S.p[x.id]={usd:x.current_price,usd_24h_change:x.price_change_percentage_24h,sp:(x.sparkline_in_7d?.price||[]).slice(-24)})}
+ catch(e){S.mkT=Date.now()-30000;const j=await gj("https://api.coingecko.com/api/v3/simple/price?ids="+Object.keys(CG).join(",")+"&vs_currencies=usd&include_24hr_change=true");for(const k in j)S.p[k]={...S.p[k],...j[k]}}},
+"USD/MXN":async()=>{if(S.mxn&&Date.now()-S.mxT<600000)return;S.mxn=(await gj("https://open.er-api.com/v6/latest/USD")).rates.MXN;S.mxT=Date.now()},
+movimientos:async()=>{const sigs=await rpc("getSignaturesForAddress",[ADDR,{limit:10}]);const out=[];
+ for(const s of sigs){let t=TXC[s.signature];if(!t){try{const r=await rpc("getTransaction",[s.signature,{encoding:"jsonParsed",maxSupportedTransactionVersion:0}]);const k=r.transaction.message.accountKeys.map(a=>a.pubkey||a);const i=k.indexOf(ADDR);
+  const own=x=>(x||[]).filter(b=>b.owner===ADDR).map(b=>b.mint+":"+b.uiTokenAmount.amount).join();
+  t={sig:s.signature,time:(r.blockTime||s.blockTime)*1000,d:i>=0?(r.meta.postBalances[i]-r.meta.preBalances[i])/1e9:0,fee:i===0?r.meta.fee/1e9:0,tok:own(r.meta.preTokenBalances)!==own(r.meta.postTokenBalances),err:!!r.meta.err};TXC[s.signature]=t}catch(e){continue}}out.push(t)}
+ localStorage.setItem("wl_txc",JSON.stringify(TXC));S.txs=out},
+chart:async()=>{if(!S.chart||Date.now()-S.chartT>300000){S.chart=(await gj("https://api.coingecko.com/api/v3/coins/solana/market_chart?vs_currency=usd&days=1")).prices;S.chartT=Date.now()}}};
+const AG=[["esc","🛰️","Escáner","#00e5ff"],["ana","📈","Analista","#00ff41"],["rie","🛡️","Riesgo","#ff3860"],["pro","💡","Propuestas","#ffb000"],["eje","🤖","Ejecutor","#a78bfa"],["con","🧮","Contador","#ff4fd8"]],COL=Object.fromEntries(AG.map(a=>[a[2],a[3]])),LAST={};
+$("ag").innerHTML=AG.map(([id,e,n,c])=>`<div class="card" style="border-color:${c}66"><div class="nm" style="color:${c}"><span class="dot" style="background:${c};box-shadow:0 0 8px ${c}"></span>${e} ${n}</div><div class="st" id="s_${id}"><span class="think">pensando…</span></div><div class="mut">último análisis hace <b id="t_${id}">--</b>s</div></div>`).join("");
+const logs=(JSON.parse(sessionStorage.getItem("wl_log2")||"[]"));function drawLog(){$("log").innerHTML=logs.map(x=>`<div><span class="mut">${x[0]}</span> <b style="color:${COL[x[1]]}">${x[1]}</b>: ${x[2]}</div>`).join("")}
+function lg(n,m){logs.unshift([hm(Date.now()),n,m]);logs.length=Math.min(logs.length,60);sessionStorage.setItem("wl_log2",JSON.stringify(logs));drawLog()}
+function say(id,n,m,delay){const s=$("s_"+id);s.innerHTML='<span class="think">pensando…</span>';
+ setTimeout(()=>{let i=0;const iv=setInterval(()=>{s.innerHTML=m.slice(0,i+=3)+'<span class="think"></span>';if(i>=m.length){clearInterval(iv);s.textContent=m}},25);LAST[id]=Date.now();lg(n,m)},delay)}
+function spark(cv,data,col){if(!data||data.length<2){cv.replaceWith(Object.assign(document.createElement("span"),{className:"mut",textContent:"sin datos"}));return}
+ const W=cv.width=cv.clientWidth*2||160,H=cv.height=cv.clientHeight*2||44,x=cv.getContext("2d"),lo=Math.min(...data),hi=Math.max(...data);x.strokeStyle=col;x.lineWidth=2;x.beginPath();
+ data.forEach((v,i)=>{const px=i/(data.length-1)*W,py=H-2-(hi>lo?(v-lo)/(hi-lo):.5)*(H-4);i?x.lineTo(px,py):x.moveTo(px,py)});x.stroke()}
+let sch;Chart.defaults.color="#8fb3a0";Chart.defaults.borderColor="rgba(0,255,65,.12)";Chart.defaults.font.family="ui-monospace,monospace";
+function nextProp(){const now=new Date(),c=new Date(now.toLocaleString("en-US",{timeZone:TZ})),off=now-c;for(const d of[0,1])for(const h of[9,18]){const t=new Date(c);t.setDate(t.getDate()+d);t.setHours(h,0,0,0);if(t>c)return new Date(t.getTime()+off)}}
+function render(){
+ // watchlist
+ const ids=Object.keys(CG).filter(id=>S.p[id]?.usd!=null);
+ if(ids.length){$("wl").innerHTML=ids.map(id=>{const q=S.p[id],c=q.usd_24h_change;return`<tr><td><b>${CG[id]}</b></td><td class="r">$${pr(q.usd)}</td><td class="r ${c==null?'':cl(c)}">${c==null?"sin datos":sg(c)}</td><td class="r"><canvas class="sp" id="sp_${id.replace(/\W/g,"")}"></canvas></td></tr>`}).join("");
+  ids.forEach(id=>{const q=S.p[id];spark($("sp_"+id.replace(/\W/g,"")),q.sp,(q.usd_24h_change??0)>=0?"#00ff41":"#ff3860")})}
+ const sp=S.p.solana?.usd;if(S.sol==null||sp==null)return;
+ const rows=[{n:"SOL",amt:S.sol,v:S.sol*sp,c:S.p.solana.usd_24h_change}].concat(S.toks.map(t=>({n:KN[t.mint]||"token "+t.mint.slice(0,4)+"…",amt:t.amt,v:t.price!=null?t.amt*t.price:null,c:t.c24})));
+ const tot=rows.reduce((s,r)=>s+(r.v||0),0),d=tot-base.usd,pc=d/base.usd*100;
+ $("mxn").textContent=S.mxn?"MX$"+f(tot*S.mxn):"MXN sin datos";$("usd").textContent="$"+f(tot)+" USD";$("solamt").textContent=f(S.sol,4)+" SOL · SOL a $"+f(sp)+(S.mxn?" · 1 USD = "+f(S.mxn)+" MXN":"");
+ $("pnl").innerHTML=`<span class="${cl(d)}">${d>=0?"▲":"▼"} ${d>=0?"+":"-"}$${f(Math.abs(d))} USD (${sg(pc)})</span>`;$("bl").textContent=`contra tu punto de partida: $${f(base.usd)} USD (${base.date})`;
+ $("pf").innerHTML=rows.map(r=>`<tr><td><b>${r.n}</b></td><td class="r">${f(r.amt,r.amt<1?4:2)}</td><td class="r">${r.v==null?"sin datos":"$"+f(r.v)}</td><td class="r">${r.v==null||!S.mxn?"sin datos":"$"+f(r.v*S.mxn)}</td><td class="r ${r.c==null?'':cl(r.c)}">${r.c==null?"sin datos":sg(r.c)}</td><td class="r">${r.v==null||!tot?"–":f(r.v/tot*100,1)+"%"}</td></tr>`).join("");
+ $("tokn").textContent=S.tokOk?(S.toks.length?"":"Por ahora solo tienes SOL."):"Otros tokens: sin datos (el RPC no respondió).";
+ // 24h
+ let ch=null,ch4=null,trend="lateral";
+ if(S.chart){const c=S.chart,a=c[0][1],h4=c[Math.max(0,c.length-49)][1],w0=S.sol*a,w1=S.sol*sp,g=w1-w0;ch=(sp-a)/a*100;ch4=(sp-h4)/h4*100;trend=ch>1?"sube":ch<-1?"baja":"lateral";
+  $("g24").innerHTML=`<span class="${cl(g)}">${g>=0?"+":"-"}$${f(Math.abs(g))} USD</span>`;$("g24b").innerHTML=`${S.mxn?(g>=0?"+":"-")+"MX$"+f(Math.abs(g*S.mxn))+" · ":""}<span class="${cl(ch)}">${sg(ch)}</span> · hace 24h valía $${f(w0)}, ahora $${f(w1)}`;
+  spark($("wsp"),c.map(x=>x[1]*S.sol).concat([w1]),g>=0?"#00ff41":"#ff3860")}
+ const buys=S.txs.filter(t=>t.tok&&!t.err).length,ins=S.txs.filter(t=>t.d>0&&!t.err),outs=S.txs.filter(t=>t.d<-0.00001-t.fee&&!t.err);
+ // agentes
+ const mk=Object.entries(CG).filter(([id])=>S.p[id]?.usd_24h_change!=null).map(([id,s])=>({s,c:S.p[id].usd_24h_change})).sort((a,b)=>b.c-a.c);
+ say("esc","Escáner",mk.length?`Mejor 24h: ${mk[0].s} ${sg(mk[0].c)} · peor: ${mk.at(-1).s} ${sg(mk.at(-1).c)}. SOL ${sg(S.p.solana.usd_24h_change??0)}.`:"Precios sin datos, reintentando.",300);
+ if(S.chart){const lo=Math.min(...S.chart.map(x=>x[1])),hi=Math.max(...S.chart.map(x=>x[1]));say("ana","Analista",`SOL ${trend.toUpperCase()}: ${sg(ch)} en 24h, ${sg(ch4)} en 4h. Rango $${f(lo)}–$${f(hi)}.`,900)}else say("ana","Analista","Gráfica de SOL sin datos, reintentando.",900);
+ const mx=tot*0.10;say("rie","Riesgo",`Máximo por operación: $${f(mx)} (10% de $${f(tot)}). Stop 7%: vender si SOL baja a $${f(sp*0.93)}.`,1500);
+ const idea=trend==="sube"&&ch>3?`Comprar hasta $${f(mx)} USD de SOL (sube ${sg(ch)} en 24h), con stop en $${f(sp*0.93)}.`:`No comprar por ahora: SOL va ${trend}${ch!=null?" ("+sg(ch)+")":""}. Mejor esperar.`;
+ say("pro","Propuestas","Borrador: "+idea,2100);$("pidea").textContent=idea;
+ say("eje","Ejecutor",`Solo ejecuta cuando Armando aprueba en el chat. Compras hechas: ${buys}.`,2700);
+ say("con","Contador",`${S.txs.length} movimientos recientes: ${ins.length} entradas, ${outs.length} salidas, ${buys} cambios de token.`,3300);
+ $("mv").innerHTML=S.txs.length?S.txs.map(t=>{const amt=Math.abs(t.d),usd=amt*sp;const w=t.err?"⚠ Operación fallida":t.tok?"🔄 Cambio de tokens (swap)":t.d>0?`<span class="up">⬇ Entraron ${f(amt,4)} SOL (~$${f(usd)})</span>`:amt>0.00001?`<span class="dn">⬆ Salieron ${f(amt,4)} SOL (~$${f(usd)})</span>`:"• Movimiento sin cambio de saldo";
+  return`<div class="mv"><b>${w}</b><br><span class="mut">${dt(t.time)} · <a target=_blank rel=noopener href="https://solscan.io/tx/${t.sig}">ver ↗</a></span></div>`}).join(""):"Sin movimientos todavía.";
+ if(S.chart){if(!sch)sch=new Chart($("sch"),{type:"line",data:{labels:[],datasets:[{label:"SOL (USD)",data:[],borderColor:"#00e5ff",backgroundColor:"rgba(0,229,255,.08)",fill:true,pointRadius:0,tension:.2}]},options:{animation:false,plugins:{legend:{display:false}},scales:{x:{ticks:{maxTicksLimit:8}}}}});
+  sch.data.labels=S.chart.map(x=>new Date(x[0]).toLocaleTimeString("es-MX",{timeZone:TZ,hour:"2-digit",minute:"2-digit"}));sch.data.datasets[0].data=S.chart.map(x=>x[1]);sch.update()}}
+async function tick(){S.errs=[];await Promise.all(Object.entries(L).map(([k,fn])=>fn().catch(()=>S.errs.push(k))));if(!S.errs.includes("wallet")&&S.p.solana)S.last=Date.now();
+ $("err").textContent=S.errs.length?"⚠ reintentando: "+S.errs.join(", "):"";render()}
+drawLog();let cd=REFRESH;
+function sec(){$("clk").textContent=hm(Date.now());cd--;$("cd").textContent=cd;$("ago").textContent=S.last?Math.round((Date.now()-S.last)/1000):"--";
+ for(const id in LAST)$("t_"+id).textContent=Math.round((Date.now()-LAST[id])/1000);
+ const n=nextProp(),r=Math.max(0,n-Date.now())/1000|0;$("pcd").textContent=[r/3600|0,(r%3600)/60|0,r%60].map(x=>String(x).padStart(2,"0")).join(":");$("pnext").textContent="siguiente: "+dt(n);
+ if(cd<=0){cd=REFRESH;tick()}}
+setInterval(sec,1000);sec();tick();
+</script></body></html>
