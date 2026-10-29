@@ -1,0 +1,78 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>Wallet Live · Armando</title><script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--g:#00ff41;--c:#00e5ff;--a:#ffb000;--r:#ff3355;--bg:#000}
+*{box-sizing:border-box}body{margin:0;background:#000;color:var(--g);font-family:"Courier New",ui-monospace,monospace;font-size:14px}
+#rain{position:fixed;inset:0;z-index:0;opacity:.18}
+main{position:relative;z-index:1;max-width:1100px;margin:auto;padding:12px;display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:800px){main{grid-template-columns:1fr 1fr}.wide{grid-column:1/-1}}
+header{grid-column:1/-1;text-align:center;text-shadow:0 0 8px var(--g)}h1{font-size:20px;margin:6px 0}
+.p{background:rgba(0,15,4,.85);border:1px solid var(--g);border-radius:6px;padding:12px;box-shadow:0 0 12px rgba(0,255,65,.35),inset 0 0 20px rgba(0,255,65,.06)}
+.p h2{margin:0 0 2px;font-size:15px;color:var(--c);text-shadow:0 0 6px var(--c)}.q{color:var(--a);font-size:12px;margin-bottom:10px;opacity:.9}
+.big{font-size:34px;font-weight:bold;text-shadow:0 0 12px var(--g)}.mid{font-size:20px;color:var(--c)}
+table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:4px;border-bottom:1px dashed rgba(0,255,65,.25);text-align:right}td:first-child,th:first-child{text-align:left}th{color:var(--c);font-weight:normal}
+.up{color:var(--g)}.dn{color:var(--r)}.mut{opacity:.6;font-size:12px}a{color:var(--c)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);animation:pl 1.2s infinite}@keyframes pl{50%{opacity:.2}}
+.err{color:var(--r)}input{background:#000;color:var(--g);border:1px solid var(--g);font-family:inherit;padding:4px;width:90px}button{background:#002b0b;color:var(--g);border:1px solid var(--g);font-family:inherit;padding:4px 8px;cursor:pointer}
+.mk{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.mk div{border:1px solid rgba(0,255,65,.3);padding:6px;border-radius:4px;text-align:center}
+canvas.ch{max-height:220px}.addr{word-break:break-all;font-size:12px}
+</style></head><body><canvas id="rain"></canvas><main>
+<header><h1>&gt; WALLET_LIVE :: AGENTE PHANTOM_</h1><div class="mut"><span class="dot"></span> EN VIVO · próxima actualización en <b id="cd">--</b>s · actualizado hace <b id="ago">--</b>s</div></header>
+<section class="p wide"><h2>[1] Tu dinero total</h2><div class="q">Qué es esto: todo lo que vale tu wallet ahorita, en dólares y en pesos.</div><div class="big" id="totUsd">$--</div><div class="mid" id="totMxn">MX$--</div><div class="mut" id="fx"></div></section>
+<section class="p wide"><h2>[2] Mis monedas</h2><div class="q">Qué es esto: cuántas monedas tienes de cada una, su precio y cuánto pesa en tu cartera.</div><table><thead><tr><th>Moneda</th><th>Cantidad</th><th>Precio</th><th>Valor</th><th>%</th></tr></thead><tbody id="hold"><tr><td colspan=5>cargando…</td></tr></tbody></table><div class="mut" id="tokNote"></div></section>
+<section class="p"><h2>[3] Ganancia / pérdida desde depósito</h2><div class="q">Qué es esto: cuánto has ganado o perdido comparado con lo que metiste.</div><div class="big" id="pnl">--</div><div id="pnlPct" class="mid"></div><div class="mut">Depósito base (USD): <input id="base" type="number" step="0.01"> <button id="saveBase">guardar</button><br>Fecha: <span id="baseDate"></span></div></section>
+<section class="p"><h2>[4] Reparto de tu cartera</h2><div class="q">Qué es esto: la dona muestra qué parte de tu dinero está en cada moneda.</div><canvas id="donut" class="ch"></canvas></section>
+<section class="p wide"><h2>[5] Gráficas en vivo</h2><div class="q">Qué es esto: arriba, cómo cambia el valor de tu wallet mientras ves esta página; abajo, el precio de SOL en las últimas 24 h.</div><canvas id="wch" class="ch"></canvas><canvas id="sch" class="ch" style="margin-top:10px"></canvas></section>
+<section class="p wide"><h2>[6] Mercado</h2><div class="q">Qué es esto: precio de las monedas más conocidas y si subieron (verde) o bajaron (rojo) en 24 h.</div><div class="mk" id="mkt"></div></section>
+<section class="p wide"><h2>[7] Movimientos recientes</h2><div class="q">Qué es esto: las últimas 10 operaciones de tu wallet; toca una para verla en Solscan.</div><table><thead><tr><th>Firma</th><th>Fecha</th><th>Estado</th></tr></thead><tbody id="txs"><tr><td colspan=3>cargando…</td></tr></tbody></table></section>
+<section class="p wide"><h2>[8] Estado</h2><div class="q">Qué es esto: si la página está conectada y confirmando que solo mira, nunca mueve tu dinero.</div><div><span class="dot"></span> EN VIVO · <b style="color:var(--a)">SOLO LECTURA</b> — esta página nunca pide llaves ni frase semilla y no firma nada.</div><div class="addr">Wallet: <a id="sol" target="_blank" rel="noopener"></a></div><div id="status" class="mut"></div></section>
+</main><script>
+const ADDR="5MVKHzjVuR7eVXxBcvbfLu9eLjguH9hMKq3YGj8Dutgp",REFRESH=25;
+const RPCS=["https://solana-rpc.publicnode.com","https://api.mainnet-beta.solana.com"];
+const TOKEN_PROGS=["TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA","TokenzQdBNbLqP5VEhdkAS6EPFLC1PE9qmrLQ5jBPgxq"];
+const CG={solana:"SOL",bitcoin:"BTC",ethereum:"ETH","jupiter-exchange-solana":"JUP",bonk:"BONK",dogwifcoin:"WIF"};
+const KNOWN={"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v":"USDC","Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB":"USDT","JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN":"JUP","DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263":"BONK","EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm":"WIF"};
+const $=i=>document.getElementById(i),f=(n,d=2)=>Number(n).toLocaleString("es-MX",{minimumFractionDigits:d,maximumFractionDigits:d});
+const S={prices:{},mxn:null,sol:null,toks:[],last:0,errs:[]};
+$("sol").href="https://solscan.io/account/"+ADDR;$("sol").textContent=ADDR;
+// baseline
+let base=JSON.parse(localStorage.getItem("wl_base")||"null")||{usd:22.48,date:"2026-10-29"};localStorage.setItem("wl_base",JSON.stringify(base));
+$("base").value=base.usd;$("baseDate").textContent=base.date;
+$("saveBase").onclick=()=>{const v=parseFloat($("base").value);if(v>0){base.usd=v;localStorage.setItem("wl_base",JSON.stringify(base));render()}};
+async function rpc(method,params){let e;for(const u of RPCS){try{const r=await fetch(u,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({jsonrpc:"2.0",id:1,method,params})});const j=await r.json();if(j.error)throw new Error(j.error.message);return j.result}catch(x){e=x}}throw e}
+async function getJ(u){const r=await fetch(u);if(!r.ok)throw new Error(r.status);return r.json()}
+async function loadWallet(){S.sol=(await rpc("getBalance",[ADDR])).value/1e9}
+async function loadTokens(){let all=[],ok=false;for(const p of TOKEN_PROGS){try{const r=await rpc("getTokenAccountsByOwner",[ADDR,{programId:p},{encoding:"jsonParsed"}]);ok=true;for(const a of r.value){const i=a.account.data.parsed.info;const amt=i.tokenAmount.uiAmount;if(amt>0)all.push({mint:i.mint,amt})}}catch(e){}}
+ if(!ok){$("tokNote").textContent="Tokens SPL: el RPC público no respondió (reintentando). Se muestran solo SOL.";return}
+ $("tokNote").textContent="";if(all.length){try{const j=await getJ("https://lite-api.jup.ag/price/v3?ids="+all.map(t=>t.mint).join(","));all.forEach(t=>t.price=j[t.mint]?.usdPrice??null)}catch(e){}}S.toks=all}
+async function loadPrices(){const j=await getJ("https://api.coingecko.com/api/v3/simple/price?ids="+Object.keys(CG).join(",")+"&vs_currencies=usd&include_24hr_change=true");S.prices=j}
+async function loadFx(){const j=await getJ("https://open.er-api.com/v6/latest/USD");S.mxn=j.rates.MXN}
+async function loadTxs(){const r=await rpc("getSignaturesForAddress",[ADDR,{limit:10}]);$("txs").innerHTML=r.length?r.map(t=>`<tr><td><a target=_blank rel=noopener href="https://solscan.io/tx/${t.signature}">${t.signature.slice(0,8)}…${t.signature.slice(-4)}</a></td><td>${t.blockTime?new Date(t.blockTime*1000).toLocaleString("es-MX",{dateStyle:"short",timeStyle:"short"}):"-"}</td><td class="${t.err?'dn':'up'}">${t.err?'falló':'ok'}</td></tr>`).join(""):"<tr><td colspan=3>Sin movimientos todavía</td></tr>"}
+let donut,wch,sch;const COLS=["#00ff41","#00e5ff","#ffb000","#ff3355","#b388ff","#ffffff"];
+Chart.defaults.color="#00ff41";Chart.defaults.font.family="Courier New";Chart.defaults.borderColor="rgba(0,255,65,.15)";
+function render(){const solP=S.prices.solana?.usd;const rows=[];if(S.sol!=null)rows.push({n:"SOL",amt:S.sol,p:solP??null});
+ S.toks.forEach(t=>rows.push({n:KNOWN[t.mint]||("Desconocido "+t.mint.slice(0,4)+"…"),amt:t.amt,p:t.price}));
+ rows.forEach(r=>r.v=r.p!=null?r.amt*r.p:null);const tot=rows.reduce((s,r)=>s+(r.v||0),0);
+ if(S.sol==null||solP==null)return;
+ $("totUsd").textContent="$"+f(tot)+" USD";$("totMxn").textContent=S.mxn?"MX$"+f(tot*S.mxn)+" MXN":"MXN reintentando…";$("fx").textContent=S.mxn?"1 USD = "+f(S.mxn,4)+" MXN":"";
+ $("hold").innerHTML=rows.map(r=>`<tr><td>${r.n}</td><td>${f(r.amt,r.amt<1?6:2)}</td><td>${r.p!=null?"$"+f(r.p,r.p<0.01?8:2):"sin precio"}</td><td>${r.v!=null?"$"+f(r.v):"-"}</td><td>${r.v!=null&&tot?f(r.v/tot*100,1)+"%":"-"}</td></tr>`).join("");
+ const d=tot-base.usd,pc=d/base.usd*100;$("pnl").textContent=(d>=0?"+":"")+"$"+f(d)+" USD";$("pnl").className="big "+(d>=0?"up":"dn");$("pnlPct").textContent=(d>=0?"▲ +":"▼ ")+f(pc)+"%"+(S.mxn?" · "+(d>=0?"+":"")+"MX$"+f(d*S.mxn):"");
+ const dr=rows.filter(r=>r.v>0);if(!donut)donut=new Chart($("donut"),{type:"doughnut",data:{labels:[],datasets:[{data:[],backgroundColor:COLS,borderColor:"#000"}]},options:{plugins:{legend:{position:"bottom"}}}});
+ donut.data.labels=dr.map(r=>r.n);donut.data.datasets[0].data=dr.map(r=>+r.v.toFixed(4));donut.update();
+ const h=JSON.parse(localStorage.getItem("wl_hist")||"[]");h.push([Date.now(),tot]);while(h.length>500)h.shift();localStorage.setItem("wl_hist",JSON.stringify(h));
+ if(!wch)wch=new Chart($("wch"),{type:"line",data:{labels:[],datasets:[{label:"Valor wallet (USD)",data:[],borderColor:"#00ff41",pointRadius:0,tension:.3,fill:true,backgroundColor:"rgba(0,255,65,.08)"}]},options:{animation:false}});
+ wch.data.labels=h.map(x=>new Date(x[0]).toLocaleTimeString("es-MX",{hour:"2-digit",minute:"2-digit"}));wch.data.datasets[0].data=h.map(x=>x[1]);wch.update();
+ $("mkt").innerHTML=Object.entries(CG).map(([id,s])=>{const p=S.prices[id];if(!p)return`<div>${s}<br>…</div>`;const c=p.usd_24h_change;return`<div>${s}<br><b>$${f(p.usd,p.usd<0.01?8:2)}</b><br><span class="${c>=0?'up':'dn'}">${c>=0?'▲':'▼'} ${f(c)}%</span></div>`}).join("")}
+async function loadSolChart(){try{const j=await getJ("https://api.coingecko.com/api/v3/coins/solana/market_chart?vs_currency=usd&days=1");const p=j.prices;
+ if(!sch)sch=new Chart($("sch"),{type:"line",data:{labels:[],datasets:[{label:"SOL 24 h (USD)",data:[],borderColor:"#00e5ff",pointRadius:0,tension:.2}]},options:{animation:false}});
+ sch.data.labels=p.map(x=>new Date(x[0]).toLocaleTimeString("es-MX",{hour:"2-digit",minute:"2-digit"}));sch.data.datasets[0].data=p.map(x=>x[1]);sch.update()}catch(e){S.errs.push("gráfica SOL")}}
+async function tick(){S.errs=[];const jobs={wallet:loadWallet,tokens:loadTokens,precios:loadPrices,"USD/MXN":loadFx,movimientos:loadTxs};
+ await Promise.all(Object.entries(jobs).map(([k,fn])=>fn().catch(()=>S.errs.push(k))));
+ if(!S.errs.includes("wallet")&&!S.errs.includes("precios"))S.last=Date.now();render();
+ $("status").innerHTML=S.errs.length?`<span class="err">⚠ reintentando: ${S.errs.join(", ")}</span>`:"Todo conectado ✔ · RPC público Solana + CoinGecko + Jupiter + open.er-api"}
+let cd=REFRESH,chartT=0;setInterval(()=>{cd--;$("cd").textContent=cd;$("ago").textContent=S.last?Math.round((Date.now()-S.last)/1000):"--";if(cd<=0){cd=REFRESH;tick();if(++chartT%12==0)loadSolChart()}},1000);
+tick();loadSolChart();
+// digital rain
+const cv=$("rain"),cx=cv.getContext("2d");let cols,drops;function rs(){cv.width=innerWidth;cv.height=innerHeight;cols=Math.floor(cv.width/14);drops=Array(cols).fill(0).map(()=>Math.random()*-50)}rs();addEventListener("resize",rs);
+const ch="アイウエオカキクケコサシスセソ01SOL$₿Ξ";setInterval(()=>{cx.fillStyle="rgba(0,0,0,.08)";cx.fillRect(0,0,cv.width,cv.height);cx.fillStyle="#00ff41";cx.font="14px monospace";drops.forEach((y,i)=>{cx.fillText(ch[Math.random()*ch.length|0],i*14,y*14);drops[i]=y*14>cv.height&&Math.random()>.975?0:y+1})},55);
+</script></body></html>
