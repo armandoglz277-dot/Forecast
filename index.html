@@ -1,0 +1,295 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>FORECAST // TERMINAL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet"></noscript>
+
+<style>
+/* Paleta muestreada de la portada de The Doors "L.A. Woman" (1971) */
+:root{--frame:#0a1628;--frame2:#071021;--maroon:#071021;--ink:#060d1a;--cream:#e6f7ff;--yel:#00e5ff;--yel2:#00e5ff;--pale:#7df9ff;--olive:#39ff88;--oliveD:#0b1830;--brown:#1a2a4a;
+--up:#39ff88;--dn:#ff5c7a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--frame);color:var(--cream);font-family:"JetBrains Mono",ui-monospace,monospace;font-size:15px;line-height:1.4;
+background-image:radial-gradient(ellipse at 50% -10%,#0d2a4a 0%,var(--frame) 45%,var(--frame2) 75%,#02050c 100%);background-attachment:fixed;min-height:100vh}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.07;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+header{display:flex;flex-wrap:wrap;gap:6px 20px;align-items:center;justify-content:space-between;padding:12px 18px;background:#050c18ee;border-bottom:3px double var(--cream);position:sticky;top:0;z-index:20;backdrop-filter:blur(4px)}
+header h1{margin:0;font-family:"Orbitron",sans-serif;font-weight:400;font-size:30px;letter-spacing:1px;color:var(--cream);line-height:1}
+header h1 em{font-style:normal;color:var(--yel)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--yel);box-shadow:0 0 8px var(--yel);animation:pl 1.2s infinite;vertical-align:middle}@keyframes pl{50%{opacity:.2}}
+.live{font:600 11px "JetBrains Mono";letter-spacing:2px;color:var(--yel);border:1px solid var(--yel);padding:1px 6px;margin:0 8px 0 4px;vertical-align:middle;border-radius:2px}
+.hd{display:flex;gap:4px 16px;flex-wrap:wrap;font-size:14px;color:#f0d9c8}.hd b{color:var(--yel)}
+main{display:grid;gap:14px;padding:16px;grid-template-columns:repeat(12,1fr);max-width:1600px;margin:0 auto}
+.p{background:linear-gradient(180deg,#0b1830f2,#060d1af5);border:1px solid #e6f7ff33;border-radius:3px;padding:14px 16px;min-width:0;box-shadow:0 10px 30px #0006,inset 0 1px 0 #00e5ff22;position:relative}
+.p::before{content:"";position:absolute;left:12px;right:12px;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--yel),transparent);opacity:.6}
+.p h2{margin:0 0 10px;font-family:"Orbitron",sans-serif;font-weight:900;font-size:19px;letter-spacing:.5px;color:var(--yel);display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.p h2 small{color:#8fb4cc;font:400 12px "JetBrains Mono"}
+.s3{grid-column:span 3}.s4{grid-column:span 4}.s5{grid-column:span 5}.s6{grid-column:span 6}.s7{grid-column:span 7}.s8{grid-column:span 8}.s12{grid-column:span 12}
+@media(max-width:1100px){.s3,.s4,.s5{grid-column:span 6}.s7,.s8{grid-column:span 12}}
+@media(max-width:700px){main{grid-template-columns:1fr;padding:8px;gap:10px}.p{grid-column:1/-1!important;padding:12px}header{position:static}header h1{font-size:22px}#chartleg{font-size:11px;right:60px}.hd{font-size:13px}}
+.big{font-family:"Orbitron",sans-serif;font-weight:900;font-size:40px;line-height:1.05;color:var(--cream);word-break:break-word}
+.mid{font-size:19px;color:var(--pale);font-weight:600}
+.up{color:var(--up)}.dn{color:var(--dn)}.mut{color:#8fb4cc;font-size:13px}a{color:var(--pale)}
+table{width:100%;border-collapse:collapse;font-size:14px}th{color:#8fb4cc;text-align:left;font-weight:400;border-bottom:1px solid #00e5ff44;padding:4px 3px;font-size:12px;text-transform:uppercase;letter-spacing:1px}td{padding:4px 3px;border-bottom:1px solid #e6f7ff12;white-space:nowrap}td.r,th.r{text-align:right}
+tbody tr:hover{background:#00e5ff0d}.tw{overflow-x:auto}
+.meme{display:inline-block;margin-left:6px;font-size:10px;padding:0 5px;background:var(--frame);color:var(--cream);border:1px solid #e6f7ff66;border-radius:2px;letter-spacing:.5px;vertical-align:middle}
+.real{font:600 11px "JetBrains Mono";color:var(--yel);letter-spacing:1.5px;margin-top:10px;text-transform:uppercase}
+.cd{font-family:"Orbitron";font-weight:900;font-size:38px;color:var(--yel)}
+.prop{border-left:3px solid var(--yel);padding-left:8px;color:var(--cream)}
+.tag{display:inline-block;border:1px solid var(--yel);color:var(--yel);padding:0 6px;border-radius:2px;font-size:12px;margin-top:8px}
+canvas.sp{width:90px;height:24px}#wsp{width:100%;height:64px;margin-top:6px}
+/* grafica */
+.tabs{display:flex;gap:6px;flex-wrap:wrap}.tabs button{font:600 12px "JetBrains Mono";background:transparent;color:var(--cream);border:1px solid #e6f7ff55;padding:3px 10px;cursor:pointer;border-radius:2px}
+.tabs button.on{background:var(--yel);color:var(--ink);border-color:var(--yel)}
+#chartbox{position:relative;height:430px}@media(max-width:700px){#chartbox{height:330px}}
+#chartleg{position:absolute;left:8px;top:6px;z-index:3;font-size:12px;color:var(--cream);pointer-events:none;background:#060d1acc;padding:3px 8px;border-radius:2px}
+#chartleg b{color:var(--yel)}.k1{color:#7df9ff}.k2{color:#a855f7}
+.cbar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+/* agentes */
+.ag{display:grid;gap:10px;grid-template-columns:repeat(3,1fr)}@media(max-width:1100px){.ag{grid-template-columns:repeat(2,1fr)}}@media(max-width:520px){.ag{grid-template-columns:1fr}}
+.card{border:1px solid #e6f7ff2a;border-top:3px solid var(--yel);border-radius:2px;padding:10px;background:#060d1acc;display:flex;flex-direction:column;gap:5px}
+.nm{font-family:"Orbitron";font-weight:900;font-size:17px;display:flex;align-items:center;gap:8px;color:var(--cream)}
+.nm .stt{margin-left:auto;font:600 10px "JetBrains Mono";letter-spacing:1px;padding:1px 6px;border-radius:2px;background:var(--olive);color:var(--ink)}
+.stt.wait{background:var(--frame);color:var(--cream);border:1px solid #e6f7ff66}
+.task{font-size:12px;color:#8fb4cc}.task b{color:var(--pale);font-weight:600}
+.st{color:var(--cream);font-size:13px;min-height:38px}.cur::after{content:"▌";color:var(--yel);animation:pl .7s infinite}
+.bar{height:5px;background:#e6f7ff14;border-radius:3px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--olive),var(--yel));transition:width .9s linear}
+.chips{display:flex;flex-wrap:wrap;gap:4px}.chip{font-size:11px;padding:0 6px;border:1px solid #00e5ff55;border-radius:2px;color:var(--pale)}
+.hb{width:52px;height:16px}
+.foot{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#5f86a0}
+#log{height:330px;overflow:auto;font-size:12px;background:#07101f;border:1px solid #e6f7ff22;padding:6px 8px}#log div{padding:2px 0;border-bottom:1px dotted #e6f7ff12;animation:fi .5s}@keyframes fi{from{background:#00e5ff33}}
+.mv{padding:6px 0;border-bottom:1px dotted #e6f7ff22;font-size:14px}
+.gl{font-size:13px;display:flex;flex-wrap:wrap;gap:6px 22px}.gl b{color:var(--yel)}
+
+/* --- terminal retro/moderno --- */
+body{font-family:"JetBrains Mono",monospace;font-size:14px;letter-spacing:.1px}
+header h1{font-family:"Orbitron",sans-serif;font-size:34px;letter-spacing:3px;color:var(--yel);text-shadow:0 0 6px #00e5ff88,0 0 18px #00e5ff33}
+header h1 em{color:var(--cream)}.blink{animation:pl 1s steps(1) infinite;color:var(--yel)}
+.p{border-radius:0;border:1px solid #00e5ff40;background:linear-gradient(180deg,#0b1830f0,#060d1af5)}
+.p::before{content:"┌─";left:-1px;top:-11px;height:auto;right:auto;background:none;color:var(--yel);font:14px "JetBrains Mono";opacity:.9}
+.p::after{content:"─┘";position:absolute;right:-1px;bottom:-10px;color:var(--yel);font:14px "JetBrains Mono";opacity:.9}
+.p h2{font-family:"Orbitron",sans-serif;font-weight:400;font-size:24px;letter-spacing:1.5px;text-transform:uppercase;text-shadow:0 0 6px #00e5ff66;border-bottom:1px dashed #00e5ff33;padding-bottom:4px}
+.p h2 small{font:400 11px "JetBrains Mono";text-transform:uppercase;letter-spacing:1px;color:#8fb4cc}
+.p h2 small::before{content:"[ "}.p h2 small::after{content:" ]"}
+.big{font-family:"Orbitron",sans-serif;font-weight:400;font-size:58px;letter-spacing:1px;color:var(--cream);text-shadow:0 0 8px #00e5ff55}
+.cd{font-family:"Orbitron";font-weight:400;font-size:52px;text-shadow:0 0 10px #00e5ff77}
+.mid{font-weight:800}.real,.task,th,.chip,.stt,.tag{text-transform:uppercase;letter-spacing:1px}
+.card{border-radius:0;border:1px solid #00e5ff33;border-top:2px solid var(--yel);background:#07101fe6}
+.nm{font-family:"Orbitron";font-weight:400;font-size:22px;letter-spacing:1px;text-transform:uppercase}
+.led{width:8px;height:8px;border-radius:50%;background:var(--yel);box-shadow:0 0 6px var(--yel);display:inline-block}
+.led.b{animation:pl .35s steps(1) infinite}
+.term{height:84px;overflow:hidden;background:#030812;border:1px solid #00e5ff22;padding:4px 6px;font-size:11px;line-height:1.45;color:#b8f5d0;display:flex;flex-direction:column-reverse}
+.term div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.term div:first-child{color:var(--yel);text-shadow:0 0 4px #00e5ff66}
+.load{display:grid;grid-template-columns:auto 1fr auto;gap:2px 6px;align-items:center;font-size:10px;color:#5f86a0;text-transform:uppercase}
+.load .bar i{transition:width .5s}.cnt{color:var(--yel);font-weight:800}
+.spin{display:inline-block;width:1ch;color:var(--yel)}
+.tabs button,.meme,.chip,.tag,.live{border-radius:0}
+.term div{flex:none}.card,.ag>*{min-width:0;overflow:hidden}.task{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ag{grid-template-columns:repeat(3,minmax(0,1fr))}@media(max-width:1100px){.ag{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.ag{grid-template-columns:1fr}}
+
+/* --- base de robots / centro de comando --- */
+body{background:#030812;background-image:radial-gradient(ellipse at 50% -20%,#0d2a4a 0%,#050c18 55%,#02050c 100%)}
+.hexbg{position:fixed;inset:0;z-index:-1;opacity:.13;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='98'%3E%3Cpath d='M28 66L0 50V16L28 0l28 16v34zm0 32V66m28-50L28 0' fill='none' stroke='%2300e5ff' stroke-width='1'/%3E%3C/svg%3E"),linear-gradient(90deg,transparent 49.5%,#00e5ff22 50%,transparent 50.5%);background-size:56px 98px,240px 240px}
+body::after{opacity:.05}
+header{background:linear-gradient(90deg,#050c18f2,#0a1a33f2,#050c18f2);border-bottom:1px solid #00e5ff66;box-shadow:0 0 30px #00e5ff22}
+header h1{font-family:"Orbitron";font-weight:900;font-size:28px;letter-spacing:4px;color:#e6f7ff;text-shadow:0 0 10px #00e5ff,0 0 26px #00e5ff55}
+header h1 em{color:#00e5ff}.live{color:#39ff88;border-color:#39ff88}.dot{background:#39ff88;box-shadow:0 0 10px #39ff88}
+.radar{width:46px;height:46px;border-radius:50%;border:1px solid #00e5ff88;position:relative;overflow:hidden;background:repeating-radial-gradient(#00e5ff22 0 1px,transparent 1px 11px);flex:none}
+.radar i{position:absolute;inset:0;background:conic-gradient(from 0deg,#00e5ffaa,transparent 70deg);animation:rot 2.4s linear infinite;border-radius:50%}@keyframes rot{to{transform:rotate(1turn)}}
+.p{border:1px solid #00e5ff44;background:linear-gradient(160deg,#0b1830ee,#060d1af5);clip-path:polygon(16px 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%,0 16px);box-shadow:inset 0 0 40px #00e5ff0d}
+.p::before{content:"";left:0;top:0;width:60px;height:2px;background:#00e5ff;box-shadow:0 0 10px #00e5ff;opacity:1;font:inherit}
+.p::after{content:"";right:0;bottom:0;width:60px;height:2px;background:#a855f7;box-shadow:0 0 10px #a855f7;opacity:1}
+.p h2{font-family:"Orbitron";font-weight:700;font-size:16px;letter-spacing:2.5px;color:#00e5ff;text-shadow:0 0 8px #00e5ff88;border-bottom:1px solid #00e5ff22}
+.p h2 small{font-family:"Rajdhani";font-weight:500;font-size:13px}
+.big{font-family:"Orbitron";font-weight:900;font-size:42px;color:#e6f7ff;text-shadow:0 0 14px #00e5ff77}
+.cd{font-family:"Orbitron";font-weight:700;font-size:40px;color:#a855f7;text-shadow:0 0 14px #a855f7}
+.real{color:#39ff88}.tag{color:#ffb020;border-color:#ffb020}.prop{border-color:#a855f7}
+.base{background:linear-gradient(160deg,#0a1a36f2,#040a16f8)}
+.base h2{font-size:20px}
+.ag{gap:14px}
+.card{border:1px solid color-mix(in srgb,var(--bc) 45%,transparent);border-top:3px solid var(--bc);background:linear-gradient(180deg,color-mix(in srgb,var(--bc) 9%,#050c18),#040912);clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);padding:12px}
+.unit{display:flex;gap:12px;align-items:center}
+.av{display:flex;gap:10px;align-items:center}
+.bot{width:74px;height:82px;filter:drop-shadow(0 0 8px var(--bc));flex:none}
+.bot .eyes{animation:eye 3.2s infinite;transform-origin:50px 44px}@keyframes eye{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+.bot .scan{animation:sc 1.6s ease-in-out infinite alternate}@keyframes sc{to{transform:translateX(54px)}}
+.bot .ant{animation:pl .8s steps(1) infinite}.bot .core{animation:pl 1.4s infinite}
+.core-r{--v:0;width:54px;height:54px;border-radius:50%;background:conic-gradient(var(--bc) calc(var(--v)*1%),#ffffff12 0);display:grid;place-items:center;position:relative;flex:none}
+.core-r::before{content:"";position:absolute;inset:6px;border-radius:50%;background:#050c18}
+.core-r i{position:absolute;inset:0;border-radius:50%;--v:inherit}
+.core-r span{position:relative;font:600 8px "JetBrains Mono";letter-spacing:1px;color:var(--bc)}
+.uid{font-family:"Orbitron";font-weight:900;font-size:20px;letter-spacing:2px;color:var(--bc);text-shadow:0 0 10px var(--bc);line-height:1.1}.uid small{font:500 11px "Rajdhani";letter-spacing:1.5px;color:#8fb4cc;text-shadow:none}
+.nm{font-family:"Orbitron";font-weight:700;font-size:16px;letter-spacing:2px;color:#e6f7ff}.led{background:var(--bc);box-shadow:0 0 8px var(--bc)}
+.stt{background:var(--bc);color:#030812}.stt.wait{background:transparent;color:#ffb020;border-color:#ffb020}
+.bar i{background:linear-gradient(90deg,color-mix(in srgb,var(--bc) 40%,transparent),var(--bc))}
+.term{height:110px;border-color:color-mix(in srgb,var(--bc) 30%,transparent)}.term div:first-child{color:var(--bc);text-shadow:0 0 5px var(--bc)}
+.chip{border-color:color-mix(in srgb,var(--bc) 50%,transparent);color:#cfefff}.cnt{color:var(--bc)}
+#log{height:220px;columns:2 420px;column-gap:24px}#log div{break-inside:avoid}
+.tabs button.on{background:#00e5ff;color:#030812}
+@media(max-width:700px){.radar{display:none}.big{font-size:36px}.bot{width:60px;height:66px}.uid{font-size:17px}header h1{font-size:20px;letter-spacing:2px}}
+</style></head><body>
+<div class="hexbg"></div><header><h1><span class="dot"></span><span class="live">LIVE</span>FORECAST <em>//</em> TERMINAL<span class="blink">_</span></h1>
+<div class="radar"><i></i></div><div class="hd"><span>🕒 <b id="clk">--</b> CDMX</span><span>última actualización hace <b id="ago">--</b>s</span><span>siguiente en <b id="cd">--</b>s</span><span>SOLO LECTURA</span><span id="err" class="dn"></span></div></header>
+<main>
+<section class="p s4"><h2>Saldo en vivo <small><a id="scan" target="_blank" rel="noopener">ver en Solscan ↗</a></small></h2>
+<div class="big" id="mxn">sin datos</div><div class="mid" id="usd"></div><div id="solamt" class="mut"></div>
+<div class="real">Ganancia real (sin contar depósitos)</div><div id="pnl" style="font-size:20px;font-weight:600"></div><div class="mut" id="bl"></div></section>
+<section class="p s4"><h2>Ganancia 24h <small>tu SOL × precio hace 24h vs ahora</small></h2><div id="g24" class="big" style="font-size:34px">sin datos</div><div id="g24b" class="mut"></div><canvas id="wsp"></canvas></section>
+<section class="p s4"><h2>Próxima propuesta <small>9:00 y 18:00 CDMX</small></h2><div class="mut">Te mando la propuesta en el chat en:</div><div class="cd" id="pcd">--:--:--</div><div class="mut" id="pnext"></div>
+<div class="prop" id="pidea" style="margin-top:6px">sin datos</div><span class="tag">⏳ esperando tu aprobación</span></section>
+<section class="p s12"><h2>Velas · tus criptos <small>velas OHLC + volumen + EMA 9 / EMA 21 · Binance (respaldo CoinGecko)</small></h2>
+<div class="cbar"><div class="tabs" id="coins"></div><div class="tabs" id="tfs"><button data-t="1" class="on">24h</button><button data-t="7">7d</button><button data-t="30">30d</button></div></div>
+<div id="chartbox"><div id="chartleg">cargando velas…</div></div></section>
+<section class="p s12 base"><h2>Agentes trabajando <small>revisan datos reales cada 25 s · ninguno gasta sin tu OK</small></h2><div class="ag" id="ag"></div></section>
+<section class="p s12"><h2>Bitácora de agentes <small>últimas 60 · eventos reales</small></h2><div id="log"></div></section>
+<section class="p s5"><h2>Criptos en uso · Portafolio</h2><div class="tw"><table><thead><tr><th>Moneda</th><th class="r">Cantidad</th><th class="r">USD</th><th class="r">MXN</th><th class="r">24h</th><th class="r">%</th></tr></thead><tbody id="pf"><tr><td colspan=6>sin datos</td></tr></tbody></table></div><div class="mut" id="tokn"></div>
+<h2 style="margin-top:18px">Movimientos de la cartera <small>hora CDMX</small></h2><div id="mv">sin datos</div></section>
+<section class="p s7"><h2>Watchlist Solana + memes <small>precios en vivo (CoinGecko)</small></h2><div class="tw"><table><thead><tr><th>Moneda</th><th class="r">Precio USD</th><th class="r">24h</th><th class="r">Gráfica 24h</th></tr></thead><tbody id="wl"><tr><td colspan=4>sin datos</td></tr></tbody></table></div></section>
+<section class="p s12 gl"><span><b>Saldo:</b> lo que vale todo lo que tienes ahorita.</span><span><b>Ganancia real:</b> lo que vale ahorita menos lo que metiste (tus depósitos no cuentan como ganancia).</span><span><b>Vela:</b> cada barrita muestra precio de apertura, máximo, mínimo y cierre del periodo; amarilla = subió, roja = bajó.</span><span><b>EMA:</b> promedio del precio; si la rápida (9) va arriba de la lenta (21), hay impulso alcista.</span><span><b>RSI:</b> 0–100; arriba de 70 = muy comprado, abajo de 30 = muy vendido.</span><span><b>Stop:</b> precio donde se vende para no perder más.</span><span><b>Propuesta:</b> idea de compra que solo pasa si tú dices OK.</span><span><b>MEME:</b> moneda de moda, sube y baja muy fuerte. Alto riesgo.</span><span class="mut">Esta página solo lee datos públicos: nunca pide llaves ni frase semilla y no opera sola.</span></section>
+</main><script>
+const ADDR="5MVKHzjVuR7eVXxBcvbfLu9eLjguH9hMKq3YGj8Dutgp",REFRESH=25,TZ="America/Mexico_City";
+const RPCS=["https://solana-rpc.publicnode.com","https://api.mainnet-beta.solana.com"],TP=["TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA","TokenzQdBNbLqP5VEhdkAS6EPFLC1PE9qmrLQ5jBPgxq"];
+const CG={solana:"SOL","jupiter-exchange-solana":"JUP","jito-governance-token":"JTO","pyth-network":"PYTH",raydium:"RAY",orca:"ORCA","render-token":"RENDER",helium:"HNT",wormhole:"W",kamino:"KMNO","drift-protocol":"DRIFT",bonk:"BONK",dogwifcoin:"WIF",popcat:"POPCAT","cat-in-a-dogs-world":"MEW","book-of-meme":"BOME","peanut-the-squirrel":"PNUT","goatseus-maximus":"GOAT",fartcoin:"FARTCOIN","official-trump":"TRUMP",bitcoin:"BTC",ethereum:"ETH"};
+const MEME=new Set(["bonk","dogwifcoin","popcat","cat-in-a-dogs-world","book-of-meme","peanut-the-squirrel","goatseus-maximus","fartcoin","official-trump"]);
+const KN={"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v":"USDC","Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB":"USDT","JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN":"JUP","DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263":"BONK","EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm":"WIF","jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL":"JTO","HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3":"PYTH","4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R":"RAY"};
+const SYMCG=Object.fromEntries(Object.entries(CG).map(([k,v])=>[v,k]));
+const $=i=>document.getElementById(i),f=(n,d=2)=>Number(n).toLocaleString("es-MX",{minimumFractionDigits:d,maximumFractionDigits:d});
+const pr=p=>p>=1?f(p,2):p>=0.01?f(p,4):f(p,8),sg=x=>(x>=0?"+":"")+f(x,2)+"%",cl=x=>x>=0?"up":"dn";
+const hm=t=>new Date(t).toLocaleTimeString("es-MX",{timeZone:TZ,hour:"2-digit",minute:"2-digit",second:"2-digit"}),dt=t=>new Date(t).toLocaleString("es-MX",{timeZone:TZ,day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})+" CDMX";
+const S={p:{},mk:null,mkT:0,mxn:null,sol:null,toks:[],tokOk:false,chart:null,chartT:0,txs:[],last:0,errs:[],ohlc:{},ohlcT:{},cycle:0},TXC=JSON.parse(localStorage.getItem("wl_txc")||"{}");
+$("scan").href="https://solscan.io/account/"+ADDR;
+// costo real: 0.2195 SOL inicial ($22.48, 29 oct) + depósito 0.1785 SOL ($17.36, 30 oct 2026). Los depósitos NO cuentan como ganancia.
+const COST={usd:22.48+17.36,sol:0.2195+0.1785,txt:"metiste ~0.398 SOL en total: $22.48 (29 oct) + $17.36 depósito (30 oct 2026)"};localStorage.removeItem("wl_base");
+async function rpc(m,pa){let e;for(const u of RPCS){try{const j=await(await tf(u,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({jsonrpc:"2.0",id:1,method:m,params:pa})})).json();if(j.error)throw new Error(j.error.message);return j.result}catch(x){e=x}}throw e}
+function tf(u,o={},ms=8000){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);return fetch(u,{...o,signal:c.signal}).finally(()=>clearTimeout(t))}
+async function gj(u){const r=await tf(u);if(!r.ok)throw new Error(r.status);return r.json()}
+// velas: Binance klines (CORS ok) -> respaldo CoinGecko OHLC (sin volumen)
+const TF={1:{i:"15m",n:96,cg:1},7:{i:"1h",n:168,cg:7},30:{i:"4h",n:180,cg:30}};let TFD=1,COIN="SOL";
+async function ohlc(sym,days){const k=sym+"|"+days;if(S.ohlc[k]&&Date.now()-S.ohlcT[k]<60000)return S.ohlc[k];const t=TF[days];let c=null,src="Binance";
+ try{const j=await gj(`https://api.binance.com/api/v3/klines?symbol=${sym}USDT&interval=${t.i}&limit=${t.n}`);c=j.map(x=>({time:x[0]/1000,open:+x[1],high:+x[2],low:+x[3],close:+x[4],value:+x[7]}))}
+ catch(e){const id=SYMCG[sym];if(!id)throw e;src="CoinGecko";const j=await gj(`https://api.coingecko.com/api/v3/coins/${id}/ohlc?vs_currency=usd&days=${t.cg}`);c=j.map(x=>({time:x[0]/1000,open:x[1],high:x[2],low:x[3],close:x[4]}))}
+ c.src=src;S.ohlc[k]=c;S.ohlcT[k]=Date.now();return c}
+const L={wallet:async()=>{S.sol=(await rpc("getBalance",[ADDR])).value/1e9},
+tokens:async()=>{let a=[],ok=false;for(const p of TP){try{const r=await rpc("getTokenAccountsByOwner",[ADDR,{programId:p},{encoding:"jsonParsed"}]);ok=true;r.value.forEach(x=>{const i=x.account.data.parsed.info;if(i.tokenAmount.uiAmount>0)a.push({mint:i.mint,amt:i.tokenAmount.uiAmount})})}catch(e){}}
+ S.tokOk=ok;if(a.length){try{const j=await gj("https://lite-api.jup.ag/price/v3?ids="+a.map(t=>t.mint).join(","));a.forEach(t=>{t.price=j[t.mint]?.usdPrice??null;t.c24=j[t.mint]?.priceChange24h??null})}catch(e){}}if(ok)S.toks=a},
+precios:async()=>{if(S.mk&&Date.now()-S.mkT<55000)return;try{const m=await gj("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids="+Object.keys(CG).join(",")+"&sparkline=true&price_change_percentage=24h");S.mk=m;S.mkT=Date.now();m.forEach(x=>S.p[x.id]={usd:x.current_price,usd_24h_change:x.price_change_percentage_24h,sp:(x.sparkline_in_7d?.price||[]).slice(-24)})}
+ catch(e){S.mkT=Date.now()-30000;const j=await gj("https://api.coingecko.com/api/v3/simple/price?ids="+Object.keys(CG).join(",")+"&vs_currencies=usd&include_24hr_change=true");for(const k in j)S.p[k]={...S.p[k],...j[k]}}},
+"USD/MXN":async()=>{if(S.mxn&&Date.now()-S.mxT<600000)return;S.mxn=(await gj("https://open.er-api.com/v6/latest/USD")).rates.MXN;S.mxT=Date.now()},
+movimientos:async()=>{const sigs=await rpc("getSignaturesForAddress",[ADDR,{limit:10}]);const out=[];
+ for(const s of sigs){let t=TXC[s.signature];if(!t){try{const r=await rpc("getTransaction",[s.signature,{encoding:"jsonParsed",maxSupportedTransactionVersion:0}]);const k=r.transaction.message.accountKeys.map(a=>a.pubkey||a);const i=k.indexOf(ADDR);
+  const own=x=>(x||[]).filter(b=>b.owner===ADDR).map(b=>b.mint+":"+b.uiTokenAmount.amount).join();
+  t={sig:s.signature,time:(r.blockTime||s.blockTime)*1000,d:i>=0?(r.meta.postBalances[i]-r.meta.preBalances[i])/1e9:0,fee:i===0?r.meta.fee/1e9:0,tok:own(r.meta.preTokenBalances)!==own(r.meta.postTokenBalances),err:!!r.meta.err};TXC[s.signature]=t}catch(e){continue}}out.push(t)}
+ localStorage.setItem("wl_txc",JSON.stringify(TXC));S.txs=out},
+chart:async()=>{if(!S.chart||Date.now()-S.chartT>300000){S.chart=(await gj("https://api.coingecko.com/api/v3/coins/solana/market_chart?vs_currency=usd&days=1")).prices;S.chartT=Date.now()}},
+velas:async()=>{S.sol1h=await ohlc("SOL",1)}};
+// ---------- indicadores ----------
+function ema(v,n){const k=2/(n+1),o=[];let e=null;v.forEach((x,i)=>{e=e==null?x:x*k+e*(1-k);o.push(i>=n-1?e:null)});return o}
+function rsi(v,n=14){if(v.length<=n)return null;let g=0,l=0;for(let i=1;i<=n;i++){const d=v[i]-v[i-1];d>0?g+=d:l-=d}g/=n;l/=n;for(let i=n+1;i<v.length;i++){const d=v[i]-v[i-1];g=(g*(n-1)+Math.max(d,0))/n;l=(l*(n-1)+Math.max(-d,0))/n}return l===0?100:100-100/(1+g/l)}
+// ---------- grafica de velas ----------
+const C={ink:"#060d1a",cream:"#e6f7ff",yel:"#00e5ff",pale:"#7df9ff",red:"#ff3b5c",frame:"#0a1628",olive:"#39ff88",orange:"#a855f7"};
+let LC=null,cs,vs,e9,e21;
+let LIBST=0;function loadLib(){if(LIBST)return;LIBST=1;const urls=["https://cdn.jsdelivr.net/npm/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js","https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"];
+ const go=i=>{if(i>=urls.length){LIBST=3;$("chartleg").textContent="Gráfica sin datos (no cargó la librería).";return}const sc=document.createElement("script");sc.src=urls[i];sc.async=true;const to=setTimeout(()=>{sc.onload=sc.onerror=null;go(i+1)},10000);
+  sc.onload=()=>{clearTimeout(to);LIBST=2;drawChart()};sc.onerror=()=>{clearTimeout(to);go(i+1)};document.head.appendChild(sc)};go(0)}
+function initChart(){if(!window.LightweightCharts){loadLib();if(LIBST!==3)$("chartleg").textContent="cargando gráfica…";return false}
+ const box=$("chartbox");LC=LightweightCharts.createChart(box,{autoSize:true,layout:{background:{type:"solid",color:"transparent"},textColor:"#8fb4cc",fontFamily:"JetBrains Mono"},
+  grid:{vertLines:{color:"rgba(160,220,255,.05)"},horzLines:{color:"rgba(160,220,255,.07)"}},rightPriceScale:{borderColor:"rgba(0,229,255,.3)"},
+  timeScale:{borderColor:"rgba(0,229,255,.3)",timeVisible:true,secondsVisible:false},crosshair:{mode:0,vertLine:{color:C.pale,labelBackgroundColor:C.frame},horzLine:{color:C.pale,labelBackgroundColor:C.frame}},
+  localization:{locale:"es-MX",timeFormatter:t=>new Date(t*1000).toLocaleString("es-MX",{timeZone:TZ,day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}),priceFormatter:p=>"$"+pr(p)}});
+ LC.applyOptions({timeScale:{tickMarkFormatter:t=>new Date(t*1000).toLocaleString("es-MX",TFD==1?{timeZone:TZ,hour:"2-digit",minute:"2-digit"}:{timeZone:TZ,day:"numeric",month:"short"})}});
+ cs=LC.addCandlestickSeries({upColor:"#39ff88",borderUpColor:"#39ff88",wickUpColor:"#9dffc4",downColor:C.red,borderDownColor:"#ff5c7a",wickDownColor:"#ff5c7a",priceFormat:{type:"custom",formatter:p=>"$"+pr(p),minMove:1e-9}});
+ vs=LC.addHistogramSeries({priceScaleId:"vol",priceFormat:{type:"volume"},lastValueVisible:false,priceLineVisible:false});LC.priceScale("vol").applyOptions({scaleMargins:{top:.82,bottom:0}});
+ cs.priceScale().applyOptions({scaleMargins:{top:.08,bottom:.22}});
+ e9=LC.addLineSeries({color:C.pale,lineWidth:2,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
+ e21=LC.addLineSeries({color:C.orange,lineWidth:2,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
+ LC.subscribeCrosshairMove(p=>{const d=p&&p.seriesData&&p.seriesData.get(cs);if(d)legend(d)});return true}
+let lastC=null;function legend(d){const c=lastC;if(!c)return;const ch=(d.close-d.open)/d.open*100;
+ $("chartleg").innerHTML=`<b>${COIN}/USD</b> · A $${pr(d.open)} · M $${pr(d.high)} · m $${pr(d.low)} · C $${pr(d.close)} <span class="${cl(ch)}">${sg(ch)}</span> · <span class="k1">EMA9</span> <span class="k2">EMA21</span> · ${c.src}`}
+async function drawChart(){if(!LC&&!initChart())return;let c;try{c=await ohlc(COIN,TFD)}catch(e){$("chartleg").textContent=`${COIN}: velas sin datos, reintentando…`;return}
+ lastC=c;const cl_=c.map(x=>x.close),a=ema(cl_,9),b=ema(cl_,21);
+ cs.setData(c.map(({time,open,high,low,close})=>({time,open,high,low,close})));
+ vs.setData(c[0].value!=null?c.map(x=>({time:x.time,value:x.value,color:x.close>=x.open?"rgba(57,255,136,.35)":"rgba(255,59,92,.45)"})):[]);
+ e9.setData(c.map((x,i)=>a[i]==null?null:{time:x.time,value:a[i]}).filter(Boolean));e21.setData(c.map((x,i)=>b[i]==null?null:{time:x.time,value:b[i]}).filter(Boolean));
+ LC.applyOptions({timeScale:{tickMarkFormatter:t=>new Date(t*1000).toLocaleString("es-MX",TFD==1?{timeZone:TZ,hour:"2-digit",minute:"2-digit"}:{timeZone:TZ,day:"numeric",month:"short"})}});
+ LC.timeScale().fitContent();legend(c.at(-1))}
+function heldCoins(){const s=["SOL"];S.toks.forEach(t=>{const n=KN[t.mint];if(n&&!["USDC","USDT"].includes(n)&&!s.includes(n))s.push(n)});return s}
+function drawCoinTabs(){const h=heldCoins();if(!h.includes(COIN))COIN="SOL";$("coins").innerHTML=h.map(n=>`<button class="${n===COIN?"on":""}" data-c="${n}">${n}</button>`).join("")+(S.toks.some(t=>!KN[t.mint])?'<span class="mut" style="align-self:center">tokens sin par: sin velas</span>':"");
+ $("coins").querySelectorAll("button").forEach(b=>b.onclick=()=>{COIN=b.dataset.c;drawCoinTabs();drawChart()})}
+document.querySelectorAll("#tfs button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#tfs button").forEach(x=>x.classList.remove("on"));b.classList.add("on");TFD=+b.dataset.t;drawChart()});
+// ---------- agentes ----------
+const AG=[["esc","🛰️","Escáner"],["ana","📈","Analista"],["rie","🛡️","Riesgo"],["pro","💡","Propuestas"],["eje","🤖","Ejecutor"],["con","🧮","Contador"]],LAST={},HB={};
+const BC=["#00e5ff","#39ff88","#ff3b5c","#ffb020","#a855f7","#4d7cff"];
+$("ag").innerHTML=AG.map(([id,e,n],i)=>`<div class="card" style="--bc:${BC[i]}"><div class="unit"><div class="av"><svg class="bot" viewBox="0 0 100 110" style="--bc:${BC[i]}"><line x1="50" y1="4" x2="50" y2="18" stroke="var(--bc)" stroke-width="2"/><circle class="ant" cx="50" cy="5" r="4" fill="var(--bc)"/>
+<path d="M18 22h64l10 12v30l-10 12H18L8 64V34z" fill="#0b1830" stroke="var(--bc)" stroke-width="2"/><rect x="18" y="34" width="64" height="20" rx="3" fill="#02060e" stroke="var(--bc)" stroke-opacity=".5"/>
+<g class="eyes"><rect x="26" y="40" width="16" height="8" rx="2" fill="var(--bc)"/><rect x="58" y="40" width="16" height="8" rx="2" fill="var(--bc)"/></g><rect class="scan" x="20" y="36" width="6" height="16" fill="#fff" opacity=".35"/>
+<path d="M30 66h40" stroke="var(--bc)" stroke-width="2" stroke-dasharray="4 3"/><path d="M28 80h44l6 8v18H22V88z" fill="#0b1830" stroke="var(--bc)" stroke-width="2"/><circle class="core" cx="50" cy="96" r="6" fill="var(--bc)"/></svg><div class="core-r"><i id="cr_${id}"></i><span>NÚCLEO</span></div></div><div class="uid">UNIT-0${i+1}<br><small>PWR ▮▮▮▮▯ · CORE ONLINE</small></div></div><div class="nm"><span class="led b" id="l_${id}"></span>${n}<span class="spin" id="sp2_${id}">|</span><span class="stt" id="x_${id}">ACTIVO</span></div>
+<div class="task">Tarea: <b id="k_${id}">arrancando…</b></div><div class="bar"><i id="b_${id}"></i></div>
+<div class="st" id="s_${id}"><span class="cur">pensando…</span></div><div class="term" id="q_${id}"></div>
+<div class="load"><span>carga</span><div class="bar"><i id="ld_${id}"></i></div><span id="lp_${id}">0%</span><span>ops</span><span></span><span class="cnt" id="op_${id}">0</span></div><div class="chips" id="c_${id}"></div>
+<div class="foot"><span>última acción <b id="t_${id}">--</b></span><canvas class="hb" id="h_${id}"></canvas></div></div>`).join("");
+const logs=(JSON.parse(sessionStorage.getItem("wl_log3")||"[]"));function drawLog(){$("log").innerHTML=logs.map(x=>`<div><span class="mut">${x[0]}</span> <b style="color:var(--yel)">${x[1]}</b>: ${x[2]}</div>`).join("")}
+function lg(n,m){logs.unshift([hm(Date.now()),n,m]);logs.length=Math.min(logs.length,60);sessionStorage.setItem("wl_log3",JSON.stringify(logs));drawLog()}
+function agent(id,n,{task,msg,chips=[],state="ACTIVO",wait=false},delay){const s=$("s_"+id),b=$("b_"+id);$("k_"+id).textContent=task;b.style.transition="none";b.style.width="0";
+ s.innerHTML='<span class="cur">procesando…</span>';
+ setTimeout(()=>{b.style.transition="width "+(0.6+delay/2000)+"s linear";b.style.width="100%"},30);
+ setTimeout(()=>{let i=0;const iv=setInterval(()=>{s.innerHTML=msg.slice(0,i+=3)+'<span class="cur"></span>';if(i>=msg.length){clearInterval(iv);s.textContent=msg}},22);
+  LAST[id]=Date.now();HB[id]=Date.now();$("c_"+id).innerHTML=chips.map(c=>`<span class="chip">${c}</span>`).join("");const x=$("x_"+id);x.textContent=state;x.className="stt"+(wait?" wait":"");lg(n,msg)},delay)}
+function beat(){const t=Date.now();AG.forEach(([id])=>{const cv=$("h_"+id);if(!cv)return;const W=cv.width=104,H=cv.height=32,x=cv.getContext("2d");x.strokeStyle="#00e5ff";x.lineWidth=2;x.beginPath();
+ const ph=((t-(HB[id]||0))/1000);const amp=ph<1.5?1:.35;for(let i=0;i<W;i++){const u=(i/W*2+t/900)%1;let y=H/2;if(u>.45&&u<.5)y-=12*amp;else if(u>.5&&u<.55)y+=8*amp;i?x.lineTo(i,y):x.moveTo(i,y)}x.stroke()});requestAnimationFrame(beat)}
+function spark(cv,data,col){if(!data||data.length<2){cv.replaceWith(Object.assign(document.createElement("span"),{className:"mut",textContent:"sin datos"}));return}
+ const W=cv.width=cv.clientWidth*2||160,H=cv.height=cv.clientHeight*2||44,x=cv.getContext("2d"),lo=Math.min(...data),hi=Math.max(...data);x.strokeStyle=col;x.lineWidth=2;x.beginPath();
+ data.forEach((v,i)=>{const px=i/(data.length-1)*W,py=H-2-(hi>lo?(v-lo)/(hi-lo):.5)*(H-4);i?x.lineTo(px,py):x.moveTo(px,py)});x.stroke()}
+function nextProp(){const now=new Date(),c=new Date(now.toLocaleString("en-US",{timeZone:TZ})),off=now-c;for(const d of[0,1])for(const h of[9,18]){const t=new Date(c);t.setDate(t.getDate()+d);t.setHours(h,0,0,0);if(t>c)return new Date(t.getTime()+off)}}
+function render(){S.cycle++;
+ const ids=Object.keys(CG),okIds=ids.filter(id=>S.p[id]?.usd!=null);
+ if(okIds.length){$("wl").innerHTML=ids.map(id=>{const q=S.p[id]||{},c=q.usd_24h_change,tg=MEME.has(id)?'<span class="meme">MEME · alto riesgo</span>':"";if(q.usd==null)return`<tr><td><b>${CG[id]}</b>${tg}</td><td class="r mut" colspan=3>sin datos</td></tr>`;
+  return`<tr><td><b>${CG[id]}</b>${tg}</td><td class="r">$${pr(q.usd)}</td><td class="r ${c==null?'':cl(c)}">${c==null?"sin datos":sg(c)}</td><td class="r"><canvas class="sp" id="sp_${id.replace(/\W/g,"")}"></canvas></td></tr>`}).join("");
+  okIds.forEach(id=>{const q=S.p[id];spark($("sp_"+id.replace(/\W/g,"")),q.sp,(q.usd_24h_change??0)>=0?"#39ff88":"#ff5c7a")})}
+ drawCoinTabs();drawChart();
+ const sp=S.p.solana?.usd;if(S.sol==null||sp==null)return;
+ const rows=[{n:"SOL",amt:S.sol,v:S.sol*sp,c:S.p.solana.usd_24h_change}].concat(S.toks.map(t=>({n:KN[t.mint]||"token "+t.mint.slice(0,4)+"…",amt:t.amt,v:t.price!=null?t.amt*t.price:null,c:t.c24})));
+ const tot=rows.reduce((s,r)=>s+(r.v||0),0),d=tot-COST.usd,pc=d/COST.usd*100;
+ $("mxn").textContent=S.mxn?"MX$"+f(tot*S.mxn):"MXN sin datos";$("usd").textContent="$"+f(tot)+" USD";$("solamt").textContent=f(S.sol,4)+" SOL · SOL a $"+f(sp)+(S.mxn?" · 1 USD = "+f(S.mxn)+" MXN":"");
+ $("pnl").innerHTML=`<span class="${cl(d)}">${d>=0?"▲":"▼"} ${d>=0?"+":"-"}$${f(Math.abs(d))} USD (${sg(pc)})</span>`;$("bl").textContent=`costo total $${f(COST.usd)} USD · ${COST.txt}`;
+ $("pf").innerHTML=rows.map(r=>`<tr><td><b>${r.n}</b></td><td class="r">${f(r.amt,r.amt<1?4:2)}</td><td class="r">${r.v==null?"sin datos":"$"+f(r.v)}</td><td class="r">${r.v==null||!S.mxn?"sin datos":"$"+f(r.v*S.mxn)}</td><td class="r ${r.c==null?'':cl(r.c)}">${r.c==null?"sin datos":sg(r.c)}</td><td class="r">${r.v==null||!tot?"–":f(r.v/tot*100,1)+"%"}</td></tr>`).join("");
+ $("tokn").textContent=S.tokOk?(S.toks.length?"":"Por ahora solo tienes SOL."):"Otros tokens: sin datos (el RPC no respondió).";
+ let ch=null,ch4=null,trend="lateral";
+ if(S.chart){const c=S.chart,a=c[0][1],h4=c[Math.max(0,c.length-49)][1],w0=S.sol*a,w1=S.sol*sp,g=w1-w0;ch=(sp-a)/a*100;ch4=(sp-h4)/h4*100;trend=ch>1?"sube":ch<-1?"baja":"lateral";
+  $("g24").innerHTML=`<span class="${cl(g)}">${g>=0?"+":"-"}$${f(Math.abs(g))} USD</span>`;$("g24b").innerHTML=`${S.mxn?(g>=0?"+":"-")+"MX$"+f(Math.abs(g*S.mxn))+" · ":""}<span class="${cl(ch)}">${sg(ch)}</span> · hace 24h valía $${f(w0)}, ahora $${f(w1)}`;
+  spark($("wsp"),c.map(x=>x[1]*S.sol).concat([w1]),g>=0?"#39ff88":"#ff5c7a")}
+ // indicadores reales de velas SOL 15m
+ let R=null,E9=null,E21=null,cross="sin datos";const v=S.sol1h;if(v&&v.length>21){const cc=v.map(x=>x.close);R=rsi(cc);E9=ema(cc,9).at(-1);E21=ema(cc,21).at(-1);cross=E9>E21?"EMA9 > EMA21 (impulso alcista)":"EMA9 < EMA21 (impulso bajista)"}
+ const buys=S.txs.filter(t=>t.tok&&!t.err).length,ins=S.txs.filter(t=>t.d>0&&!t.err),outs=S.txs.filter(t=>t.d<-0.00001-t.fee&&!t.err);
+ const mk=Object.entries(CG).filter(([id])=>S.p[id]?.usd_24h_change!=null).map(([id,s])=>({s,c:S.p[id].usd_24h_change})).sort((a,b)=>b.c-a.c);
+ const nUp=mk.filter(x=>x.c>0).length,nP=new Date(nextProp()),mx=tot*0.10;
+ agent("esc","Escáner",{task:`escaneando ${okIds.length}/${ids.length} monedas (CoinGecko)`,msg:mk.length?`Top 24h: ${mk.slice(0,3).map(x=>x.s+" "+sg(x.c)).join(", ")} · peor: ${mk.at(-1).s} ${sg(mk.at(-1).c)}. ${nUp} de ${mk.length} en verde.`:"Precios sin datos, reintentando.",chips:[`${okIds.length} monedas`,`${nUp} suben`,`${mk.length-nUp} bajan`,`ciclo #${S.cycle}`]},200);
+ agent("ana","Analista",{task:v?`calculando RSI/EMA en ${v.length} velas SOL 15m (${v.src})`:"esperando velas",msg:R!=null?`SOL RSI14 = ${f(R,1)} (${R>70?"sobrecomprado":R<30?"sobrevendido":"neutral"}) · ${cross}. 24h ${sg(ch??0)}, 4h ${sg(ch4??0)}.`:"Velas sin datos, reintentando.",chips:R!=null?[`RSI ${f(R,1)}`,`EMA9 $${f(E9)}`,`EMA21 $${f(E21)}`]:[]},800);
+ agent("rie","Riesgo",{task:`revisando saldo real $${f(tot)} USD`,msg:`Máximo por operación: $${f(mx)} (10% de $${f(tot)}). Stop 7%: vender si SOL baja a $${f(sp*0.93)}. Pérdida máx por op: $${f(mx*0.07)}.`,chips:["límite 10%","stop 7%",d<0?"cartera en rojo":"cartera en verde"]},1400);
+ const idea=trend==="sube"&&ch>3&&(R==null||R<70)?`Comprar hasta $${f(mx)} USD de SOL (sube ${sg(ch)} en 24h), con stop en $${f(sp*0.93)}.`:`No comprar por ahora: SOL va ${trend}${ch!=null?" ("+sg(ch)+")":""}${R!=null?", RSI "+f(R,0):""}. Mejor esperar.`;
+ agent("pro","Propuestas",{task:`armando borrador para ${dt(nP)}`,msg:"Borrador: "+idea,chips:["⏳ esperando aprobación","9:00 · 18:00 CDMX"],state:"BORRADOR",wait:true},2000);$("pidea").textContent=idea;
+ agent("eje","Ejecutor",{task:"en espera de tu sí · no ejecuta nada solo",msg:`En espera de tu sí. No ha ejecutado nada sin tu OK. Swaps detectados en la cartera: ${buys}.`,chips:["0 órdenes pendientes","solo con tu OK"],state:"EN ESPERA",wait:true},2600);
+ agent("con","Contador",{task:`cuadrando ${S.txs.length} movimientos on-chain`,msg:`Saldo $${f(tot)} USD (${f(S.sol,4)} SOL). Ganancia real ${d>=0?"+":"-"}$${f(Math.abs(d))} (${sg(pc)}) vs costo $${f(COST.usd)}. ${ins.length} entradas, ${outs.length} salidas.`,chips:[`${S.txs.length} movs`,`costo $${f(COST.usd)}`]},3200);
+ $("mv").innerHTML=S.txs.length?S.txs.map(t=>{const amt=Math.abs(t.d),usd=amt*sp;const w=t.err?"⚠ Operación fallida":t.tok?"🔄 Cambio de tokens (swap)":t.d>0?`<span class="up">⬇ Entraron ${f(amt,4)} SOL (~$${f(usd)})</span>`:amt>0.00001?`<span class="dn">⬆ Salieron ${f(amt,4)} SOL (~$${f(usd)})</span>`:"• Movimiento sin cambio de saldo";
+  return`<div class="mv"><b>${w}</b><br><span class="mut">${dt(t.time)} · <a target=_blank rel=noopener href="https://solscan.io/tx/${t.sig}">ver ↗</a></span></div>`}).join(""):"Sin movimientos todavía."}
+function softRender(){const w=$("wl");if(Object.keys(S.p).length||S.sol!=null){const sv=agent;agent=()=>{};try{render()}finally{agent=sv;S.cycle--}}}
+async function tick(){S.errs=[];let rq=0;await Promise.all(Object.entries(L).map(([k,fn])=>fn().catch(()=>S.errs.push(k)).finally(()=>{clearTimeout(rq);rq=setTimeout(()=>{try{softRender()}catch(e){}},150)})));if(!S.errs.includes("wallet")&&S.p.solana)S.last=Date.now();
+ $("err").textContent=S.errs.length?"⚠ reintentando: "+S.errs.join(", "):"";render()}
+
+document.querySelectorAll(".p h2").forEach(h=>{const t=h.firstChild;if(t&&t.nodeType===3&&t.textContent.trim())t.textContent="> "+t.textContent.trim().toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^A-Z0-9]+/g,"_").replace(/_$/,"")+" "});
+// motor de actividad continua: cada línea usa datos reales ya descargados
+const OPS={},SPN="|/-\\";let tk=0;
+function q(id,line){const b=$("q_"+id);if(!b)return;const d=document.createElement("div");d.textContent=hm(Date.now()).slice(0,8)+" "+line;b.prepend(d);while(b.children.length>8)b.lastChild.remove();OPS[id]=(OPS[id]||0)+1;$("op_"+id).textContent=OPS[id]}
+function work(){tk++;AG.forEach(([id],i)=>{$("sp2_"+id).textContent=SPN[(tk+i)%4]});
+ const ids=Object.keys(CG).filter(id=>S.p[id]?.usd!=null),sp=S.p.solana?.usd,v=S.sol1h;
+ if(ids.length){const id=ids[tk%ids.length],p=S.p[id];q("esc",`procesando ${CG[id]}/USD $${pr(p.usd)} ${p.usd_24h_change!=null?sg(p.usd_24h_change):"s/d"}${MEME.has(id)?" [MEME]":""}`)}
+ if(v&&v.length>21){const n=22+(tk%(v.length-22)),c=v.slice(0,n+1).map(x=>x.close),r=rsi(c),e=ema(c,9).at(-1),k=v[n];q("ana",`vela ${new Date(k.time*1000).toLocaleTimeString("es-MX",{timeZone:TZ,hour:"2-digit",minute:"2-digit"})} C $${pr(k.close)} RSI ${r==null?"s/d":f(r,1)} EMA9 $${f(e)}`)}
+ if(sp&&S.sol!=null){const tot=S.sol*sp,ck=[()=>`saldo $${f(tot)} OK · tope 10% = $${f(tot*.1)}`,()=>`stop 7% SOL $${f(sp*.93)} · dist ${f((sp-sp*.93)/sp*100,1)}%`,()=>`exposición SOL 100% · RPC ok`,()=>`pérdida máx/op $${f(tot*.1*.07)}`];q("rie",ck[tk%4]())}
+ if(tk%2==0)q("pro",`borrador listo · envío ${dt(nextProp())} · ⏳ aprobación`);
+ if(tk%3==0)q("eje",`EN ESPERA de tu sí · 0 órdenes · nada ejecutado`);
+ if(S.txs.length){const t=S.txs[tk%S.txs.length];q("con",`tx ${t.sig.slice(0,6)}… ${t.d>0?"+":""}${f(t.d,4)} SOL ${dt(t.time).replace(" CDMX","")}`)}
+ AG.forEach(([id],i)=>{const busy=[ids.length/22,v?1:0,sp?1:0,.4,.12,S.txs.length/10][i]||0,ld=Math.round(Math.min(98,busy*55+30*Math.abs(Math.sin(tk/3+i))+8));$("ld_"+id).style.width=ld+"%";const cr=$("cr_"+id);if(cr)cr.parentNode.style.setProperty("--v",ld);$("lp_"+id).textContent=ld+"%"})}
+setInterval(work,1100);
+drawLog();beat();let cd=REFRESH;
+function sec(){$("clk").textContent=hm(Date.now());cd--;$("cd").textContent=cd;$("ago").textContent=S.last?Math.round((Date.now()-S.last)/1000):"--";
+ for(const id in LAST)$("t_"+id).textContent="hace "+Math.round((Date.now()-LAST[id])/1000)+"s";
+ const n=nextProp(),r=Math.max(0,n-Date.now())/1000|0;$("pcd").textContent=[r/3600|0,(r%3600)/60|0,r%60].map(x=>String(x).padStart(2,"0")).join(":");$("pnext").textContent="siguiente: "+dt(n);
+ if(cd<=0){cd=REFRESH;tick()}}
+setInterval(sec,1000);sec();loadLib();tick();
+</script></body></html>
